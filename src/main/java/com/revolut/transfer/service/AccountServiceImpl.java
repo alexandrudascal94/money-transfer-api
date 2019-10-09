@@ -4,11 +4,10 @@ import java.math.BigDecimal;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.google.inject.persist.UnitOfWork;
 import com.revolut.transfer.enumeration.Currency;
+import com.revolut.transfer.exception.AccountDepositException;
 import com.revolut.transfer.exception.AccountNotCreatedException;
 import com.revolut.transfer.exception.AccountNotFoundException;
-import com.revolut.transfer.exception.AccountDepositException;
 import com.revolut.transfer.exception.AccountOverdraftException;
 import com.revolut.transfer.exception.AccountWithrowException;
 import com.revolut.transfer.exception.InvalidAmountException;
@@ -21,9 +20,6 @@ public class AccountServiceImpl implements AccountService {
 	private AccountRepository acccountRepository;
 
 	private ExchangeService exchangeService;
-
-	@Inject
-	UnitOfWork unitOfWorkProvider;
 
 	@Inject
 	public AccountServiceImpl(AccountRepository accRepository, ExchangeService exchangeService) {
