@@ -125,3 +125,23 @@ Sample response:
 }
 ```
 
+## Tests
+Application code is covered with unit tests.
+There are:
+* API testing with REST Assured
+* Unit tests with Junit 4
+* Integration test with database
+
+Each method has own test class
+
+## Build and run
+Application can be built with command
+```
+mvn clean package
+```
+
+Then, run the application with 
+```
+java -jar target/transfer-1.0.0-SNAPSHOT.jar 
+```
+
