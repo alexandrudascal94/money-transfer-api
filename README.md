@@ -30,3 +30,98 @@ For testing purposes, application supports only 3 currecies
 * USD 
 * EUR 
 * GPB
+
+
+### POST /account  sample
+
+request:
+```json
+{
+	"currency": "USD",
+	"name":"saving"
+}
+```
+
+response:
+```json
+{
+    "id": 2,
+    "name": "saving",
+    "currency": "USD",
+    "balance": "0.00"
+}
+```
+
+### POST /account/{id}/deposit   sample
+
+request:
+```json
+{
+	"currency": "EUR",
+	"amount": "110.54"
+}
+```
+
+response:
+```json
+{
+    "id": 1,
+    "name": "savings",
+    "currency": "USD",
+    "balance": "121.59"
+}
+```
+
+### POST /account/{id}/withdraw  sample
+
+request:
+```json
+{
+	"currency": "EUR",
+	"amount": "10.02"
+}
+```
+
+response:
+```json
+{
+    "id": 1,
+    "name": "savings",
+    "currency": "USD",
+    "balance": "110.5680"
+}
+```
+
+### GET /account/{id}  sample
+
+response:
+```json
+{
+    "id": 1,
+    "name": "savings",
+    "currency": "USD",
+    "balance": "110.57"
+}
+```
+
+### POST /account/{fromId}/transfer/{toId}
+
+request:
+```json
+{
+	"currency": "EUR",
+	"amount": 10.00
+}
+```
+
+Sample response:
+```json
+{
+    "message": "Transfer successeful",
+    "fromAccount": 1,
+    "toAccount": 2,
+    "amount": "10.00",
+    "currency": "EUR"
+}
+```
+
