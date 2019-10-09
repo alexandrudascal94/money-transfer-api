@@ -88,7 +88,7 @@ response:
     "id": 1,
     "name": "savings",
     "currency": "USD",
-    "balance": "110.5680"
+    "balance": "110.57"
 }
 ```
 
@@ -142,6 +142,7 @@ mvn clean package
 
 Then, run the application with 
 ```
-java -jar target/transfer-1.0.0-SNAPSHOT.jar 
+java -jar target\revolut-transfer.jar
+
 ```
 
