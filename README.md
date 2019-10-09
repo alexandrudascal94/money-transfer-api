@@ -11,14 +11,15 @@ REST API for create, deposit, withrow money and transfers between accounts.
 * REST-assured
 
 ## API documentation
-Exposed REST endpoints
+REST endpoints
 
-| Http method | Endpoint                                 | Request                                           | Description                                                                                                                                                  
-| POST        | /account                                 | {   "name": "account name",   "currency": "USD" } | Create new account with balance 0.00  |                        
-| POST        | /account/{id}/deposit                    | {   "amount": "150.67",   "currency": "USD"  }    | Deposit money |
-| POST        | /account/{id}/withdraw                   | {   "amount": "100.00",   "currency": "EUR"  }    | Withdraw request |
-| GET         | /account/{id}                            |                                                   | Get account overview |
-| POST        | /account/{fromId}/transfer/{toId} | {   "amount": "200.00",   "currency": "USD" }     | Transfer money request from account fromId to account toId       |
+| Http method | Endpoint                                        | Sample request                                           | Description                                                    |
+|-------------|-------------------------------------------------|---------------------------------------------------|----------------------------------------------------------------|
+| POST        | /account                                        | {   "name": "account name",   "currency": "USD" } | Create new account                         |
+| POST        | /account/{Id}/deposit                    | {   "amount": "10.01",   "currency": "USD"  }    | Deposit money to account found by id |
+| POST        | /account/{id}/withdraw                   | {   "amount": "1000.00",   "currency": "EUR"  }    | Withdraw money from account found by id     |
+| GET         | /account/{id}                    |                                                   | Get account details                                         |
+| POST        | /account/{fromId}/transfer/{toId} | {   "amount": "120.00",   "currency": "GPB" }     | Transfer money from account fromId to account toId       |
 
 When account is created, account will be return in the response. User can see all the details and use the id for other operations.
 
