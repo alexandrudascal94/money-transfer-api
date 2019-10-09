@@ -33,22 +33,22 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Account create(Account account) {
-			return acccountRepository.create(account)
-				.orElseThrow(() -> new AccountNotCreatedException("Account was not created."));
+		return acccountRepository.create(account)
+			.orElseThrow(() -> new AccountNotCreatedException("Account was not created."));
 	}
 
 	@Override
 	@Transactional(rollbackOn = { Exception.class, RuntimeException.class })
 	public Account deposit(long accountId, BigDecimal amount, Currency currency) {
-		if(!isValidAmount(amount)) {
+		if (!isValidAmount(amount)) {
 			throw new InvalidAmountException("Invalid deposit amount. must be greater then 0.01");
 		}
 		Account account = findById(accountId);
 		account = account.addBalance(exchangeIfNeed(currency, account.getCurrency(), amount));
-		synchronized (account) {
-			return acccountRepository.save(account)
-				.orElseThrow(() -> new AccountDepositException("Deposit was not performed."));
-		}
+
+		return acccountRepository.save(account)
+			.orElseThrow(() -> new AccountDepositException("Deposit was not performed."));
+
 	}
 
 	@Override
@@ -57,42 +57,41 @@ public class AccountServiceImpl implements AccountService {
 		Account account = findById(accountId);
 		BigDecimal amountToWithrow = exchangeIfNeed(currency, account.getCurrency(), amount);
 
-		if(!isValidAmount(amount)) {
+		if (!isValidAmount(amount)) {
 			throw new InvalidAmountException("Invalid withrow amount. must be greater then 0.01");
 		}
-		
-		synchronized (account) {
-			if (!isWithdrawable(account.getBalance(), amountToWithrow)) {
-				throw new AccountOverdraftException("Not enough found for withrow");
-			}
-			account = account.subtractBalance(amountToWithrow);
-			return acccountRepository.save(account)
-				.orElseThrow(() -> new AccountWithrowException("Account was not saved"));
+
+		if (!isWithdrawable(account.getBalance(), amountToWithrow)) {
+			throw new AccountOverdraftException("Not enough found for withrow");
 		}
+		account = account.subtractBalance(amountToWithrow);
+		return acccountRepository.save(account)
+			.orElseThrow(() -> new AccountWithrowException("Account was not saved"));
+
 	}
 
 	@Override
 	@Transactional(rollbackOn = { Exception.class, RuntimeException.class })
 	public void transfer(long fromAccountId, long toAccountId, BigDecimal amount, Currency currency) {
-		synchronized (currency) {
-			Account fromAccount = findById(fromAccountId);
-			Account toAccount = findById(toAccountId);
+		Account fromAccount = findById(fromAccountId);
+		Account toAccount = findById(toAccountId);
 
-			if(!isValidAmount(amount)) {
-				throw new InvalidAmountException("Invalid transfer amount. must be greater then 0.01");
-			}
-			
-			if (!isWithdrawable(fromAccount.getBalance(), amount)) {
-				throw new AccountOverdraftException("Not enough found for transfer");
-			}
-
-			BigDecimal amountToWithrow = exchangeIfNeed(currency, fromAccount.getCurrency(), amount);
-			fromAccount = fromAccount.subtractBalance(amountToWithrow);
-			toAccount = toAccount.addBalance(exchangeIfNeed(currency, toAccount.getCurrency(), amount));
-
-			acccountRepository.save(fromAccount);
-			acccountRepository.save(toAccount);
+		if (!isValidAmount(amount)) {
+			throw new InvalidAmountException("Invalid transfer amount. must be greater then 0.01");
 		}
+
+		BigDecimal amountToWithrow = exchangeIfNeed(currency, fromAccount.getCurrency(), amount);
+		if (!isWithdrawable(fromAccount.getBalance(), amountToWithrow)) {
+			throw new AccountOverdraftException("Not enough found for transfer");
+		}
+		fromAccount = fromAccount.subtractBalance(amountToWithrow);
+
+		BigDecimal amountToDeposit = exchangeIfNeed(currency, fromAccount.getCurrency(), amount);
+		toAccount = toAccount.addBalance(amountToDeposit);
+
+		acccountRepository.save(fromAccount);
+		acccountRepository.save(toAccount);
+
 	}
 
 	@Override
@@ -111,7 +110,7 @@ public class AccountServiceImpl implements AccountService {
 	private boolean isWithdrawable(BigDecimal balance, BigDecimal amountToWithrow) {
 		return balance.compareTo(amountToWithrow) >= 0;
 	}
-	
+
 	private boolean isValidAmount(BigDecimal amount) {
 		return amount.compareTo(MoneyParser.parse("0.01")) > 0;
 	}

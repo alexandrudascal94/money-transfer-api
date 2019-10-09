@@ -1,11 +1,16 @@
 package com.revolut.transfer.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Test;
@@ -108,4 +113,63 @@ public class AccountServiceTransferShould {
 		accountServiceSpy.transfer(idFrom, idTo, MoneyParser.parse("0.001"), Currency.EUR);
 	}
 
+	@Test
+	public void add_exchangedAmount_when_toTransferAccountHasDifferencCurrency() {
+
+		long idFrom = 10;
+		long idTo = 20;
+		BigDecimal initialBalance = MoneyParser.parse("100.00");
+		Currency accountCurrency = Currency.EUR;
+		Currency transferCurrency = Currency.GBP;
+		BigDecimal exhangedTransferAmount = MoneyParser.parse("15.00");
+
+		Account testAccount = new Account("test account", accountCurrency, initialBalance);
+		AccountService accountServiceSpy = spy(accountService);
+
+		doReturn(exhangedTransferAmount).when(exchangeService)
+			.exchange(any(), any(), any());
+		doReturn(testAccount).when(accountServiceSpy)
+			.findById(anyLong());
+		doReturn(Optional.ofNullable(testAccount)).when(accountRepository)
+			.save(any(Account.class));
+
+		ArgumentCaptor<Account> argument = ArgumentCaptor.forClass(Account.class);
+
+		accountServiceSpy.transfer(idFrom, idTo, MoneyParser.parse("10.00"), transferCurrency);
+
+		verify(accountRepository, times(2)).save(argument.capture());
+		assertEquals(initialBalance.add(MoneyParser.parse("15.00")), argument.getAllValues()
+			.get(1)
+			.getBalance());
+	}
+
+	@Test
+	public void substract_exchangedAmount_when_fromTransferAccountHasDifferencCurrency() {
+
+		long idFrom = 10;
+		long idTo = 20;
+		BigDecimal initialBalance = MoneyParser.parse("100.00");
+		Currency accountCurrency = Currency.EUR;
+		Currency transferCurrency = Currency.GBP;
+		BigDecimal exhangedTransferAmount = MoneyParser.parse("15.00");
+
+		Account testAccount = new Account("test account", accountCurrency, initialBalance);
+		AccountService accountServiceSpy = spy(accountService);
+
+		doReturn(exhangedTransferAmount).when(exchangeService)
+			.exchange(any(), any(), any());
+		doReturn(testAccount).when(accountServiceSpy)
+			.findById(anyLong());
+		doReturn(Optional.ofNullable(testAccount)).when(accountRepository)
+			.save(any(Account.class));
+
+		ArgumentCaptor<Account> argument = ArgumentCaptor.forClass(Account.class);
+
+		accountServiceSpy.transfer(idFrom, idTo, MoneyParser.parse("10.00"), transferCurrency);
+
+		verify(accountRepository, times(2)).save(argument.capture());
+		assertEquals(initialBalance.subtract(MoneyParser.parse("15.00")), argument.getAllValues()
+			.get(0)
+			.getBalance());
+	}
 }

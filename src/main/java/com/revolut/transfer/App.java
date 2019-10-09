@@ -12,7 +12,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.revolut.transfer.controller.AccountController;
 import com.revolut.transfer.di.PersistenceInitializer;
-import com.revolut.transfer.di.ProductionModule;
+import com.revolut.transfer.di.AppModule;
 import com.revolut.transfer.dto.RequestErrorRespose;
 import com.revolut.transfer.exception.AccountDepositException;
 import com.revolut.transfer.exception.AccountNotCreatedException;
@@ -31,7 +31,7 @@ public class App {
 	public static void main(String[] args) {
 
 		Javalin app = Javalin.create();
-		Injector injector = Guice.createInjector(new ProductionModule());
+		Injector injector = Guice.createInjector(new AppModule());
 		start(app, PORT, injector);
 	}
 
@@ -65,46 +65,39 @@ public class App {
 	}
 
 	private static void errorHandlingConfiguration(Javalin app) {
-		// TODO
+
 		app.exception(AccountNotFoundException.class, (e, ctx) -> {
-			ctx.json(new RequestErrorRespose(HttpStatus.NOT_FOUND_404, "Invalid Request. " + e.getMessage(),
-					ctx.req.getPathInfo()))
+			ctx.json(new RequestErrorRespose(HttpStatus.NOT_FOUND_404, "Invalid Request. " + e.getMessage(), ctx.req.getPathInfo()))
 				.status(HttpStatus.NOT_FOUND_404);
 		});
 
 		app.exception(AccountNotCreatedException.class, (e, ctx) -> {
-			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(),
-					ctx.req.getPathInfo()))
+			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(), ctx.req.getPathInfo()))
 				.status(HttpStatus.BAD_REQUEST_400);
 		});
 
 		app.exception(AccountDepositException.class, (e, ctx) -> {
-			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(),
-					ctx.req.getPathInfo()))
+			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(), ctx.req.getPathInfo()))
 				.status(HttpStatus.BAD_REQUEST_400);
 		});
 
 		app.exception(AccountNotCreatedException.class, (e, ctx) -> {
-			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(),
-					ctx.req.getPathInfo()))
+			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(), ctx.req.getPathInfo()))
 				.status(HttpStatus.BAD_REQUEST_400);
 		});
 
 		app.exception(BadRequestResponse.class, (e, ctx) -> {
-			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(),
-					ctx.req.getPathInfo()))
+			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(), ctx.req.getPathInfo()))
 				.status(HttpStatus.BAD_REQUEST_400);
 		});
-		
+
 		app.exception(AccountOverdraftException.class, (e, ctx) -> {
-			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(),
-					ctx.req.getPathInfo()))
+			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(), ctx.req.getPathInfo()))
 				.status(HttpStatus.BAD_REQUEST_400);
 		});
-		
+
 		app.exception(ExchangeRateNotFoundException.class, (e, ctx) -> {
-			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(),
-					ctx.req.getPathInfo()))
+			ctx.json(new RequestErrorRespose(HttpStatus.BAD_REQUEST_400, "Invalid Request. " + e.getMessage(), ctx.req.getPathInfo()))
 				.status(HttpStatus.BAD_REQUEST_400);
 		});
 	}

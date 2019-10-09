@@ -6,10 +6,10 @@ import javax.persistence.Persistence;
 
 import com.google.inject.Provider;
 
-public class TestEntityManagerProvider implements Provider<EntityManager>{
-	
+public class TestEntityManagerProvider implements Provider<EntityManager> {
+
 	private static EntityManager entityManagerInstance;
-	
+
 	static {
 		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test-database");
 		entityManagerInstance = entityManagerFactory.createEntityManager();

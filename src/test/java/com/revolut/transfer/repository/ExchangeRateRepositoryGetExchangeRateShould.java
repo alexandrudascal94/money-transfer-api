@@ -23,7 +23,7 @@ public class ExchangeRateRepositoryGetExchangeRateShould {
 	public void throw_ExchangeRateNotFoundException_whenRateisNotFound() {
 		rateReposiotry.getExchangeRate(Currency.USD, Currency.EUR);
 	}
-	
+
 	@Test
 	public void get_CorrectRate_whenRateExists() {
 		BigDecimal expectedRate = MoneyParser.parse("0.89");

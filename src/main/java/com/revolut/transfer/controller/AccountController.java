@@ -19,7 +19,6 @@ import io.javalin.http.Context;
 
 public class AccountController {
 
-
 	private AccountService accountService;
 	
 	@Inject
@@ -70,7 +69,7 @@ public class AccountController {
 		OperationRequest transfer = getOperationRequestIfValid(ctx);
 
 		accountService.transfer(fromId, toId, MoneyParser.parse(transfer.amount), transfer.currency);
-		TransferResponse message = new TransferResponse("Transfer successefull", fromId, toId, transfer.amount,
+		TransferResponse message = new TransferResponse("Transfer successful", fromId, toId, transfer.amount,
 				transfer.currency);
 
 		ctx.json(message)

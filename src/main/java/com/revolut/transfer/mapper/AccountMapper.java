@@ -16,7 +16,7 @@ public class AccountMapper {
 		response.id = account.getId();
 		response.name = account.getName();
 		response.currency = account.getCurrency();
-		response.balance = account.getBalance().toString();
+		response.balance = MoneyParser.format(account.getBalance());
 		return response;
 	}	
 }

@@ -103,5 +103,4 @@ public class AccountControllerFindByIdMethodShould {
 			.when()
 			.post("/account");
 	}
-
 }

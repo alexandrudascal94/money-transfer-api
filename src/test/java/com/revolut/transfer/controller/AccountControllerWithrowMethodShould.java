@@ -30,7 +30,7 @@ import io.restassured.mapper.ObjectMapperType;
 public class AccountControllerWithrowMethodShould {
 
 	private static final int PORT = 5004;
-	
+
 	private static Javalin app = Javalin.create();
 
 	@BeforeClass
@@ -52,7 +52,7 @@ public class AccountControllerWithrowMethodShould {
 	public static void cleanUp() {
 		App.stop(app);
 	}
-	
+
 	@Test
 	public void return_HttpBadRequest_when_InvalidAccountId() {
 		given().body(new OperationRequest(Currency.EUR, "10.00"))
@@ -61,7 +61,7 @@ public class AccountControllerWithrowMethodShould {
 			.then()
 			.statusCode(HttpStatus.BAD_REQUEST_400);
 	}
-	
+
 	@Test
 	public void return_HttpNotFound_when_IdNotExixt() {
 		given().body(new OperationRequest(Currency.EUR, "10.00"))
@@ -70,7 +70,7 @@ public class AccountControllerWithrowMethodShould {
 			.then()
 			.statusCode(HttpStatus.NOT_FOUND_404);
 	}
-	
+
 	@Test
 	public void return_RequestErrorResponse_when_InvalidAccountId() {
 		given().body(new OperationRequest(Currency.EUR, "10.00"))
@@ -79,7 +79,7 @@ public class AccountControllerWithrowMethodShould {
 			.then()
 			.statusCode(HttpStatus.BAD_REQUEST_400);
 	}
-	
+
 	@Test
 	public void return_RequestErrorResponse_when_IdNotExit() {
 		String path = "/account/10/withrow";
@@ -91,13 +91,13 @@ public class AccountControllerWithrowMethodShould {
 			.body("message", notNullValue())
 			.body("request", equalTo(path));
 	}
-	
+
 	@Test
 	public void return_HttOk_when_areEnoughMoney() {
 		given().body(new OperationRequest(Currency.EUR, "200.00"))
-		.when()
-		.post("/account/1/deposit");
-		
+			.when()
+			.post("/account/1/deposit");
+
 		String path = "/account/1/withrow";
 		given().body(new OperationRequest(Currency.EUR, "10.00"))
 			.when()
@@ -105,22 +105,26 @@ public class AccountControllerWithrowMethodShould {
 			.then()
 			.statusCode(HttpStatus.OK_200);
 	}
-	
+
 	@Test
 	public void return_CorretcBalance_when_areEnoughMoney() {
 		String balance = given().body(new OperationRequest(Currency.EUR, "200.00"))
-		.when()
-		.post("/account/1/deposit").getBody().as(AccountResponse.class).balance;
-		
+			.when()
+			.post("/account/1/deposit")
+			.getBody()
+			.as(AccountResponse.class).balance;
+
 		String path = "/account/1/withrow";
-		BigDecimal expectedResul = MoneyParser.parse(balance).subtract(MoneyParser.parse("10.00"));
-		
+		BigDecimal expectedResul = MoneyParser.parse(balance)
+			.subtract(MoneyParser.parse("10.00"));
+
 		given().body(new OperationRequest(Currency.EUR, "10.00"))
 			.when()
 			.post(path)
-			.then().body("balance", equalTo(expectedResul.toString()));
+			.then()
+			.body("balance", equalTo(expectedResul.toString()));
 	}
-	
+
 	private static void seInitialData() {
 		given().body(new AccountRequest("test-savings", Currency.EUR))
 			.when()

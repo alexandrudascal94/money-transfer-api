@@ -16,5 +16,4 @@ public interface AccountService {
 	public Account withrow(long accountId, BigDecimal amount, Currency cuurrency);
 	
 	public void transfer(long fromAccountId, long toAccountId, BigDecimal amount, Currency currency);
-
 }

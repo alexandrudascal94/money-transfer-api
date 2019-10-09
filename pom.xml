@@ -7,6 +7,10 @@
 	<artifactId>transfer</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.javalin</groupId>
@@ -24,7 +28,6 @@
 			<artifactId>hamcrest-junit</artifactId>
 			<version>2.0.0.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
@@ -76,12 +79,6 @@
 			<version>1.10.19</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.vmlens</groupId>
-			<artifactId>concurrent-junit</artifactId>
-			<version>1.0.0</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -113,8 +110,8 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-assembly</id> 
-						<phase>package</phase> 
+						<id>make-assembly</id>
+						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
